@@ -4,7 +4,7 @@ using tasks.Middlewares;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-dsg
+
 builder.Services.AddControllers();
 builder.Services.AddTask();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
