@@ -33,9 +33,9 @@ public class TasksController : ControllerBase
     }
 
     [HttpPost]
-    public ActionResult Post(Task1 newTask1)
+    public ActionResult Post(Task1 newTask)
     {
-        var newId = TasksService.Add(newTask1);
+        var newId = TasksService.Add(newTask);
 
         return CreatedAtAction("Post", 
             new {id = newId}, TasksService.GetById(newId));
