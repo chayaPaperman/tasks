@@ -1,3 +1,8 @@
+using System;
+using System.Collections.Generic;
+using System.Security.Claims;
+using System.Text;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using tasks.Models;
 using tasks.Interfaces;
@@ -9,8 +14,6 @@ namespace tasks.Controllers;
 [Route("[controller]")]
 public class UsersController : ControllerBase
 {
-
-
     IUserService UsersService;
     public UsersController(IUserService UsersService)
     {
@@ -61,5 +64,26 @@ public class UsersController : ControllerBase
             return BadRequest();
         }
         return NoContent();
+    }
+
+    [HttpPost]
+    [Route("/login")]
+    public ActionResult<String> Login([FromBody] User user)
+    {
+        var dt = DateTime.Now;
+        // if (User.Username != "Wray"
+        // || User.Password != $"W{dt.Year}#{dt.Day}!")
+        // {
+        //     return Unauthorized();
+        // }
+
+        var claims = new List<Claim>
+        {
+            new Claim("type", "Admin"),
+        };
+
+        var token = UsersService.GetToken(claims);
+
+        return new OkObjectResult(UsersService.WriteToken(token));
     }
 }
