@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using tasks.Models;
 using tasks.Interfaces;
+using tasks.Services;
 
 namespace tasks.Controllers;
 
@@ -21,12 +22,14 @@ public class UsersController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize(Policy = "Admin")]
     public ActionResult<List<User>> Get()
     {
         return UsersService.GetAll();
     }
 
     [HttpGet("{id}")]
+    [Authorize(Policy = "User")]
     public ActionResult<User> Get(int id)
     {
         var user = UsersService.GetById(id);
@@ -36,6 +39,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Policy = "Admin")]
     public ActionResult Post(User newUser)
     {
         var newId = UsersService.Add(newUser);
@@ -45,6 +49,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpPut("{id}")]
+    [Authorize(Policy = "User")]
     public ActionResult Put(int id,User newUser)
     {
         var result = UsersService.Update(id, newUser);
@@ -56,6 +61,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpDelete("{id}")]
+    [Authorize(Policy = "Admin")]
     public ActionResult Delete(int id)
     {
         var result = UsersService.Delete(id);
@@ -68,22 +74,30 @@ public class UsersController : ControllerBase
 
     [HttpPost]
     [Route("/login")]
-    public ActionResult<String> Login([FromBody] User user)
+    public ActionResult<String> Login([FromBody] User u)
     {
         var dt = DateTime.Now;
-        // if (User.Username != "Wray"
-        // || User.Password != $"W{dt.Year}#{dt.Day}!")
-        // {
-        //     return Unauthorized();
-        // }
+
+        User user=UsersService.getUser(u.Name,u.Password);
+
+        if(user==null){
+            return Unauthorized();
+        }
 
         var claims = new List<Claim>
         {
-            new Claim("type", "Admin"),
+            new Claim("id",user.Id.ToString()),
         };
 
-        var token = UsersService.GetToken(claims);
+        if(user.Password=="12345678"){
+            claims.Add(new Claim("type", "Admin"));
+        }
+        else{
+            claims.Add(new Claim("type", "User"));
+        }
 
-        return new OkObjectResult(UsersService.WriteToken(token));
+        var token = LoginService.GetToken(claims);
+
+        return new OkObjectResult(LoginService.WriteToken(token));
     }
 }
