@@ -28,7 +28,7 @@ public class UsersService : IUserService
             new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true
-            });
+            })!;
         }
     }
 
@@ -41,7 +41,7 @@ public class UsersService : IUserService
 
     public User GetById(int id) 
     {
-        return UsersList.FirstOrDefault(u => u.Id == id);
+        return UsersList.FirstOrDefault(u => u.Id == id)!;
     }
 
     public int Add(User newUser)
@@ -126,7 +126,7 @@ public class UsersService : IUserService
         //     new JwtSecurityTokenHandler().WriteToken(token);
 
         public User getUser(string name , string password){
-            return UsersList.Find(u=>u.Name==name && u.Password==password);
+            return UsersList.Find(u=>u.Name==name && u.Password==password)!;
         }
 
 }

@@ -22,7 +22,7 @@ public class TasksService : ITasksService
             new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true
-            });
+            })!;
         }
     }
 
@@ -31,11 +31,11 @@ public class TasksService : ITasksService
         File.WriteAllText(fileName, JsonSerializer.Serialize(tasksList));
     }
 
-    public List<Task1> GetAll() => tasksList;
+    public List<Task1> GetAll(int userId) => tasksList.FindAll(t=>t.UserId==userId);
 
-    public Task1 GetById(int id) 
+    public Task1 GetById(int userId,int id) 
     {
-        return tasksList.FirstOrDefault(t => t.Id == id);
+        return tasksList.FirstOrDefault(t => t.UserId==userId&&t.Id == id)!;
     }
 
     public int Add(Task1 newTask)
@@ -48,7 +48,6 @@ public class TasksService : ITasksService
         else
             {
                  newTask.Id =  tasksList.Max(t => t.Id) + 1;
-
             }
 
         tasksList.Add(newTask);
@@ -63,7 +62,7 @@ public class TasksService : ITasksService
         if (id != newTask.Id)
             return false;
 
-        var existingTask = GetById(id);
+        var existingTask = GetById(newTask.UserId,id);
         if (existingTask == null )
             return false;
 
@@ -79,9 +78,9 @@ public class TasksService : ITasksService
     }  
 
       
-    public bool Delete(int id)
+    public bool Delete(int userId,int id)
     {
-         var existingTask = GetById(id);
+         var existingTask = GetById(userId,id);
         if (existingTask == null )
             return false;
 

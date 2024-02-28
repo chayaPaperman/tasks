@@ -32,6 +32,8 @@ public class UsersController : ControllerBase
     [Authorize(Policy = "User")]
     public ActionResult<User> Get(int id)
     {
+        if(!(int.Parse(User.FindFirst("id")?.Value!)==id) && User.FindFirst("type")?.Value!="Admin")
+            return Unauthorized();
         var user = UsersService.GetById(id);
         if (user == null)
             return NotFound();
@@ -52,6 +54,8 @@ public class UsersController : ControllerBase
     [Authorize(Policy = "User")]
     public ActionResult Put(int id,User newUser)
     {
+        if(!(int.Parse(User.FindFirst("id")?.Value!)==id) && User.FindFirst("type")?.Value!="Admin")
+            return Unauthorized();
         var result = UsersService.Update(id, newUser);
         if (!result)
         {

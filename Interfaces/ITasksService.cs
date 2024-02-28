@@ -5,14 +5,14 @@ namespace tasks.Interfaces{
 
     public interface ITasksService
     {
-        List<Task1> GetAll();
+        List<Task1> GetAll(int userId);
     
-        Task1 GetById(int id);
+        Task1 GetById(int userId,int id);
         
         int Add(Task1 newTask);
     
         bool Update(int id, Task1 newTask);
         
-        bool Delete(int id);
+        bool Delete(int userId,int id);
     }
 }
