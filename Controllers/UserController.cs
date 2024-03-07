@@ -76,7 +76,7 @@ public class UsersController : ControllerBase
         return NoContent();
     }
 
-    [HttpPost]
+        [HttpPost]
     [Route("/login")]
     public ActionResult<String> Login([FromBody] User u)
     {
@@ -101,6 +101,7 @@ public class UsersController : ControllerBase
         }
 
         var token = LoginService.GetToken(claims);
+        // Console.WriteLine(LoginService.WriteToken(token));
 
         return new OkObjectResult(LoginService.WriteToken(token));
     }
