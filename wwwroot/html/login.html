@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>login</h1>
+    <form action="javascript:void(0);" onsubmit="login()" method="post">
+        <label for="name">name</label>
+        <input type="text" name="name" id="name"><br><br>
+        <label for="password">password</label>
+        <input type="password" name="password" id="password">
+        <input type="submit" value="send">
+    </form>
+
+</body>
+<script>
+    const name = document.getElementById('name');
+    const password = document.getElementById('password');
+    const uri = '/login'
+    const login = () => {
+        const item = {
+            Id: parseInt(3),
+            Name: name.value,
+            password: password.value
+        }
+        fetch(uri, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(item)
+        })
+            .then(res => res.status === 401 ?  error: res.json())
+            .then(data => {
+                localStorage.setItem("tasksToken", data)
+            })
+            .then(res => window.location.href = "../index.html")
+            .catch(error => alert("we don't know you, enter again"))
+            .finally(()=>{name.value='';password.value=''})
+    }
+</script>
+
+</html>

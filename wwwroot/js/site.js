@@ -1,8 +1,16 @@
 const uri = '/tasks';
 let tasks = [];
-
+///let token=localStorage.getItem('tasksToken')
 function getItems() {
-    fetch(uri)
+    fetch(uri,{
+       method: 'GET',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization':`Bearer ${token}`
+        },
+        body: JSON.stringify()
+    })
         .then(response => response.json())
         .then(data => _displayItems(data))
         .catch(error => console.error('Unable to get items.', error));
@@ -10,17 +18,16 @@ function getItems() {
 
 function addItem() {
     const addNameTextbox = document.getElementById('add-name');
-
     const item = {
         isDone: false,
         description: addNameTextbox.value.trim()
     };
-
     fetch(uri, {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization':`Bearer ${token}`
             },
             body: JSON.stringify(item)
         })
@@ -34,7 +41,12 @@ function addItem() {
 
 function deleteItem(id) {
     fetch(`${uri}/${id}`, {
-            method: 'DELETE'
+            method: 'DELETE',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization':`Bearer ${token}`
+            },
         })
         .then(() => getItems())
         .catch(error => console.error('Unable to delete item.', error));
@@ -61,7 +73,8 @@ function updateItem() {
             method: 'PUT',
             headers: {
                 'Accept': 'application/json',
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization':`Bearer ${token}`
             },
             body: JSON.stringify(item)
         })

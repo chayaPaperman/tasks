@@ -40,7 +40,28 @@
 
     <script src="js/site.js" asp-append-version="true"></script>
     <script type="text/javascript">
-        window.location = "./login.html";
+        const token=localStorage.getItem('tasksToken')
+
+
+
+//         const moment = require('moment');
+
+//         function tokenValid(token = {}) {
+//   const currentDate = moment().utc();
+//   const expiryDate = moment.unix(token.created_at).add(token.expires_in, 'seconds').utc();
+
+//   return currentDate < expiryDate;
+// }
+
+ function tokenValid(token = {}) {
+  const now = Date.now() / 1000;
+  const expiry = token.created_at + token.expires_in;
+  return now < expiry;
+}
+
+
+        if(!token&&!tokenValid(token))
+             window.location.href = "./html/login.html"
         getItems();
     </script>
 </body>
