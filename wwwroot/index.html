@@ -38,31 +38,29 @@
         <tbody id="tasks"></tbody>
     </table>
 
+    <a id="to_users" hidden href="./html/users.html">to users</a>
+    <!-- postman -->
+    <div class="postman-run-button" data-postman-action="collection/fork" data-postman-var-1=":collection_id" data-postman-collection-url=":collection_url"></div>
+    <script type="text/javascript">
+        (function(p, o, s, t, m, a, n) {
+            !p[s] && (p[s] = function() {
+                (p[t] || (p[t] = [])).push(arguments);
+            });
+            !o.getElementById(s + t) && o.getElementsByTagName("head")[0].appendChild((
+                (n = o.createElement("script")),
+                (n.id = s + t), (n.async = 1), (n.src = m), n
+            ));
+        }(window, document, "_pm", "PostmanRunObject", "https://run.pstmn.io/button.js"));
+    </script>
+    <!-- postman -->
     <script src="js/site.js" asp-append-version="true"></script>
     <script type="text/javascript">
-        const token=localStorage.getItem('tasksToken')
+        const token = localStorage.getItem('tasksToken')
 
-
-
-//         const moment = require('moment');
-
-//         function tokenValid(token = {}) {
-//   const currentDate = moment().utc();
-//   const expiryDate = moment.unix(token.created_at).add(token.expires_in, 'seconds').utc();
-
-//   return currentDate < expiryDate;
-// }
-
- function tokenValid(token = {}) {
-  const now = Date.now() / 1000;
-  const expiry = token.created_at + token.expires_in;
-  return now < expiry;
-}
-
-
-        if(!token&&!tokenValid(token))
-             window.location.href = "./html/login.html"
+        if (!token)
+            window.location.href = "./html/login.html"
         getItems();
+        getIfAdmin()
     </script>
 </body>
 

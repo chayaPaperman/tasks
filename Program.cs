@@ -72,18 +72,8 @@ builder.Services.AddSwaggerGen();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-app.Map("/favicon.ico", (a) =>
-    a.Run(async c => await Task.CompletedTask));
-
-app.UseLogMiddleware("file.log");
-
-app.Use(async (context, next) => 
-{   
-    await next.Invoke();
-});
-
-
-//
+// app.Map("/favicon.ico", (a) =>
+//     a.Run(async c => await Task.CompletedTask));
 
 if (app.Environment.IsDevelopment())
 {
@@ -96,9 +86,25 @@ app.UseHttpsRedirection();
 app.UseDefaultFiles();
 app.UseStaticFiles();
 
+app.UseLogMiddleware("file.log");
+
+// app.Use(async (context, next) => 
+// {   
+//     await next.Invoke();
+// });
+
+
+//
+
+// app.UseRouting();
+
+
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-
+//   app.UseEndpoints(endpoints  =>
+//             {
+//                 endpoints.MapControllers();
+//             });
 app.Run();

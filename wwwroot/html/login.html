@@ -8,6 +8,7 @@
 </head>
 
 <body>
+    <h1 style="background-color: yellow;">!!!!!!!!!!!!!!!!!!!!!!auto save!!!!!!!!!!!!!!!!!!!!!!</h1>
     <h1>login</h1>
     <form action="javascript:void(0);" onsubmit="login()" method="post">
         <label for="name">name</label>
@@ -29,20 +30,28 @@
             password: password.value
         }
         fetch(uri, {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(item)
-        })
-            .then(res => res.status === 401 ?  error: res.json())
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(item)
+            })
+            .then(res => {
+                if (res.status === 401)
+                    throw new Error();
+                else
+                    return res.json();
+            })
             .then(data => {
                 localStorage.setItem("tasksToken", data)
             })
             .then(res => window.location.href = "../index.html")
             .catch(error => alert("we don't know you, enter again"))
-            .finally(()=>{name.value='';password.value=''})
+            .finally(() => {
+                name.value = '';
+                password.value = ''
+            })
     }
 </script>
 

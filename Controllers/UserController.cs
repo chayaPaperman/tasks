@@ -105,4 +105,12 @@ public class UsersController : ControllerBase
 
         return new OkObjectResult(LoginService.WriteToken(token));
     }
+
+    [Route("/ifAdmin")]
+    [HttpGet]
+    [Authorize(Policy = "Admin")]
+    public ActionResult<String> GetIfAdmin()
+    {
+        return new OkObjectResult("true");
+    }
 }

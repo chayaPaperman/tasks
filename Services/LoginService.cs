@@ -18,6 +18,7 @@ namespace tasks.Services{
                 issuer,
                 claims,
                 expires: DateTime.Now.AddDays(1.0),
+                // expires: DateTime.Now,
                 signingCredentials: new SigningCredentials(key, SecurityAlgorithms.HmacSha256)
             );
 
@@ -28,7 +29,6 @@ namespace tasks.Services{
                 ValidAudience = issuer,
                 IssuerSigningKey = key,
                 ClockSkew = TimeSpan.Zero // remove delay of token when expire
-                // ClockSkew = Zero // remove delay of token when expire
             };
 
         public static string WriteToken(SecurityToken token) =>

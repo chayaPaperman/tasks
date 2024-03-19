@@ -39,7 +39,7 @@ public class TasksController : ControllerBase
         var newId = TasksService.Add(newTask);
 
         return CreatedAtAction("Post", 
-            new {id = newId}, TasksService.GetById(1,newId));
+            new {id = newId}, TasksService.GetById(int.Parse(User.FindFirst("id")?.Value!),newId));
     }
 
     [HttpPut("{id}")]

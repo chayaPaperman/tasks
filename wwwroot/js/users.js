@@ -1,5 +1,7 @@
-const uri = '/tasks';
-let tasks = [];
+const uri = '/users';
+let users = [];
+
+const token = localStorage.getItem('tasksToken')
 
 function getItems() {
     fetch(uri, {
@@ -15,15 +17,18 @@ function getItems() {
         .then(data => _displayItems(data))
         .catch(error => {
             console.error('Unable to get items.', error)
-            window.location.href = "../html/login.html"
+                // throw new Error('Parameter is not a number!');
+                // window.location.href = "../html/login.html"
         });
 }
 
 function addItem() {
     const addNameTextbox = document.getElementById('add-name');
+    const addPasswordTextbox = document.getElementById('add-password');
     const item = {
-        isDone: false,
-        description: addNameTextbox.value.trim()
+        id: 0,
+        name: addNameTextbox.value.trim(),
+        password: addPasswordTextbox.value.trim()
     };
     fetch(uri, {
             method: 'POST',
@@ -38,6 +43,7 @@ function addItem() {
         .then(() => {
             getItems();
             addNameTextbox.value = '';
+            addPasswordTextbox.value = '';
         })
         .catch(error => console.error('Unable to add item.', error));
 }
@@ -94,13 +100,13 @@ function closeInput() {
 }
 
 function _displayCount(itemCount) {
-    const name = (itemCount === 1) ? 'task' : 'tasks';
+    const name = (itemCount === 1) ? 'user' : 'users';
 
     document.getElementById('counter').innerText = `${itemCount} ${name}`;
 }
 
 function _displayItems(data) {
-    const tBody = document.getElementById('tasks');
+    const tBody = document.getElementById('users');
     tBody.innerHTML = '';
 
     _displayCount(data.length);
@@ -108,14 +114,14 @@ function _displayItems(data) {
     const button = document.createElement('button');
 
     data.forEach(item => {
-        let isDoneCheckbox = document.createElement('input');
-        isDoneCheckbox.type = 'checkbox';
-        isDoneCheckbox.disabled = true;
-        isDoneCheckbox.checked = item.isDone;
+        // let isDoneCheckbox = document.createElement('input');
+        // isDoneCheckbox.type = 'checkbox';
+        // isDoneCheckbox.disabled = true;
+        // isDoneCheckbox.checked = item.isDone;
 
-        let editButton = button.cloneNode(false);
-        editButton.innerText = 'Edit';
-        editButton.setAttribute('onclick', `displayEditForm(${item.id})`);
+        // let editButton = button.cloneNode(false);
+        // editButton.innerText = 'Edit';
+        // editButton.setAttribute('onclick', `displayEditForm(${item.id})`);
 
         let deleteButton = button.cloneNode(false);
         deleteButton.innerText = 'Delete';
@@ -123,43 +129,25 @@ function _displayItems(data) {
 
         let tr = tBody.insertRow();
 
+        // let td1 = tr.insertCell(0);
+        // td1.appendChild(isDoneCheckbox);
+
         let td1 = tr.insertCell(0);
-        td1.appendChild(isDoneCheckbox);
+        let textNode1 = document.createTextNode(item.name);
+        td1.appendChild(textNode1);
 
         let td2 = tr.insertCell(1);
-        let textNode = document.createTextNode(item.description);
-        td2.appendChild(textNode);
+        let textNode2 = document.createTextNode(item.password);
+        td2.appendChild(textNode2);
 
-        let td3 = tr.insertCell(2);
-        td3.appendChild(editButton);
+        // let td3 = tr.insertCell(2);
+        // td3.appendChild(editButton);
 
-        let td4 = tr.insertCell(3);
+        let td4 = tr.insertCell(2);
         td4.appendChild(deleteButton);
     });
 
-    tasks = data;
+    users = data;
 }
 
-function usersButten() {
-    const to_users = document.getElementById('to_users');
-    to_users.hidden = false;
-}
-
-function getIfAdmin() {
-    fetch('/ifAdmin', {
-            method: 'GET',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify()
-        })
-        .then(res => {
-            if (res.status === 200)
-                usersButten();
-            else
-                throw new Error();
-        })
-        .catch()
-}
+getItems();
