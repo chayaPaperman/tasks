@@ -8,6 +8,10 @@ button,
     display: none;
 }
 
+#editUserForm {
+    display: none;
+}
+
 table {
     font-family: Arial, sans-serif;
     border: 1px solid;

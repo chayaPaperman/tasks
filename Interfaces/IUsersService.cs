@@ -17,7 +17,7 @@ namespace tasks.Interfaces{
         
         int Add(User newUser);
     
-        bool Update(int id, User newUser);
+        bool Update(User newUser);
         
         bool Delete(int id);
 

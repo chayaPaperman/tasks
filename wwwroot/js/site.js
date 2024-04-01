@@ -140,6 +140,58 @@ function _displayItems(data) {
     tasks = data;
 }
 
+function closeUserDetails() {
+    document.getElementById('editUserForm').style.display = 'none';
+}
+
+function closeUserDetails() {
+    document.getElementById('editUserForm').style.display = 'none';
+}
+
+function updateDetails() {
+    const user = {
+        id: 0,
+        name: document.getElementById('edit-user-name').value.trim(),
+        password: document.getElementById('edit-user-password').value.trim()
+    };
+
+    fetch('users', {
+            method: 'PUT',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify(user)
+        })
+        .catch(error => console.error('Unable to update user.', error));
+
+    closeUserDetails();
+
+    return false;
+}
+
+function getUser() {
+    fetch('/user', {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${ token }`
+            },
+            body: JSON.stringify()
+        })
+        .then(response => response.json())
+        .then(res => displayEditUserForm(res))
+        .catch(err => console.log(err))
+}
+
+function displayEditUserForm(user) {
+    document.getElementById('edit-user-name').value = user.name;
+    document.getElementById('edit-user-password').value = user.password;
+    document.getElementById('editUserForm').style.display = 'block';
+}
+
 function usersButten() {
     const to_users = document.getElementById('to_users');
     to_users.hidden = false;

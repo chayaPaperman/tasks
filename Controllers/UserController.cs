@@ -28,12 +28,12 @@ public class UsersController : ControllerBase
         return UsersService.GetAll();
     }
 
-    [HttpGet("{id}")]
+    [HttpGet]
+    [Route("/user")]
     [Authorize(Policy = "User")]
-    public ActionResult<User> Get(int id)
+    public ActionResult<User> getUser()
     {
-        if(!(int.Parse(User.FindFirst("id")?.Value!)==id) && User.FindFirst("type")?.Value!="Admin")
-            return Unauthorized();
+        var id=int.Parse(User.FindFirst("id")?.Value!);
         var user = UsersService.GetById(id);
         if (user == null)
             return NotFound();
@@ -50,13 +50,13 @@ public class UsersController : ControllerBase
             new {id = newId}, UsersService.GetById(newId));
     }
 
-    [HttpPut("{id}")]
+    [HttpPut]
     [Authorize(Policy = "User")]
-    public ActionResult Put(int id,User newUser)
+    public ActionResult Put(User newUser)
     {
-        if(!(int.Parse(User.FindFirst("id")?.Value!)==id) && User.FindFirst("type")?.Value!="Admin")
-            return Unauthorized();
-        var result = UsersService.Update(id, newUser);
+        var id=int.Parse(User.FindFirst("id")?.Value!);
+        newUser.Id=id;
+        var result = UsersService.Update(newUser);
         if (!result)
         {
             return BadRequest();
@@ -101,7 +101,6 @@ public class UsersController : ControllerBase
         }
 
         var token = LoginService.GetToken(claims);
-        // Console.WriteLine(LoginService.WriteToken(token));
 
         return new OkObjectResult(LoginService.WriteToken(token));
     }

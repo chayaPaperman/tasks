@@ -64,12 +64,9 @@ public class UsersService : IUserService
         return newUser.Id;
     }
   
-    public bool Update(int id, User newUser)
+    public bool Update( User newUser)
     {
-        if (id != newUser.Id)
-            return false;
-
-        var existingUser = GetById(id);
+        var existingUser = GetById(newUser.Id);
         if (existingUser == null )
             return false;
 
@@ -102,29 +99,6 @@ public class UsersService : IUserService
         return true;
     }  
 
-        // private static SymmetricSecurityKey key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("SXkSqsKyNUyvGbnHs7ke2NCq8zQzNLW7mPmHbnZZ"));
-        // private static string issuer = "https://localhost:7254";
-        // public static SecurityToken GetToken(List<Claim> claims) =>
-        //     new JwtSecurityToken(
-        //         issuer,
-        //         issuer,
-        //         claims,
-        //         expires: DateTime.Now.AddDays(1.0),
-        //         signingCredentials: new SigningCredentials(key, SecurityAlgorithms.HmacSha256)
-        //     );
-
-        // public static TokenValidationParameters GetTokenValidationParameters() =>
-        //     new TokenValidationParameters
-        //     {
-        //         ValidIssuer = issuer,
-        //         ValidAudience = issuer,
-        //         IssuerSigningKey = key,
-        //         ClockSkew = TimeSpan.Zero // remove delay of token when expire
-        //     };
-
-        // public static string WriteToken(SecurityToken token) =>
-        //     new JwtSecurityTokenHandler().WriteToken(token);
-
         public User getUser(string name , string password){
             return UsersList.Find(u=>u.Name==name && u.Password==password)!;
         }
@@ -138,4 +112,5 @@ public static class UserUtils
         services.AddSingleton<IUserService, UsersService>();
     }
 }
+
 }
