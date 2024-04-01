@@ -210,8 +210,6 @@ function getIfAdmin() {
         .then(res => {
             if (res.status === 200)
                 usersButten();
-            else
-                throw new Error();
         })
-        .catch()
+        .catch(err => console.error(err))
 }

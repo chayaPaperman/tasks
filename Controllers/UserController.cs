@@ -15,10 +15,13 @@ namespace tasks.Controllers;
 [Route("[controller]")]
 public class UsersController : ControllerBase
 {
+    private int userId;
     IUserService UsersService;
-    public UsersController(IUserService UsersService)
+    public UsersController(IUserService UsersService,IHttpContextAccessor httpContextAccessor )
     {
         this.UsersService = UsersService;
+        string id=httpContextAccessor.HttpContext?.User?.FindFirst("id")?.Value;
+        this.userId = int.Parse(id!=null?id:"0");
     }
 
     [HttpGet]
@@ -33,8 +36,7 @@ public class UsersController : ControllerBase
     [Authorize(Policy = "User")]
     public ActionResult<User> getUser()
     {
-        var id=int.Parse(User.FindFirst("id")?.Value!);
-        var user = UsersService.GetById(id);
+        var user = UsersService.GetById(this.userId);
         if (user == null)
             return NotFound();
         return user;
@@ -54,8 +56,7 @@ public class UsersController : ControllerBase
     [Authorize(Policy = "User")]
     public ActionResult Put(User newUser)
     {
-        var id=int.Parse(User.FindFirst("id")?.Value!);
-        newUser.Id=id;
+        newUser.Id=this.userId;
         var result = UsersService.Update(newUser);
         if (!result)
         {
@@ -105,8 +106,8 @@ public class UsersController : ControllerBase
         return new OkObjectResult(LoginService.WriteToken(token));
     }
 
-    [Route("/ifAdmin")]
     [HttpGet]
+    [Route("/ifAdmin")]
     [Authorize(Policy = "Admin")]
     public ActionResult<String> GetIfAdmin()
     {
