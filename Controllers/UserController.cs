@@ -4,12 +4,11 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using tasks.Models;
 using tasks.Interfaces;
+using tasks.Models;
 using tasks.Services;
 
 namespace tasks.Controllers;
-
 
 [ApiController]
 [Route("[controller]")]
@@ -17,11 +16,12 @@ public class UsersController : ControllerBase
 {
     private int userId;
     IUserService UsersService;
-    public UsersController(IUserService UsersService,IHttpContextAccessor httpContextAccessor )
+
+    public UsersController(IUserService UsersService, IHttpContextAccessor httpContextAccessor)
     {
         this.UsersService = UsersService;
-        string id=httpContextAccessor.HttpContext?.User?.FindFirst("id")?.Value;
-        this.userId = int.Parse(id!=null?id:"0");
+        string id = httpContextAccessor.HttpContext?.User?.FindFirst("id")?.Value;
+        this.userId = int.Parse(id != null ? id : "0");
     }
 
     [HttpGet]
@@ -48,15 +48,14 @@ public class UsersController : ControllerBase
     {
         var newId = UsersService.Add(newUser);
 
-        return CreatedAtAction("Post", 
-            new {id = newId}, UsersService.GetById(newId));
+        return CreatedAtAction("Post", new { id = newId }, UsersService.GetById(newId));
     }
 
     [HttpPut]
     [Authorize(Policy = "User")]
     public ActionResult Put(User newUser)
     {
-        newUser.Id=this.userId;
+        newUser.Id = this.userId;
         var result = UsersService.Update(newUser);
         if (!result)
         {
@@ -77,27 +76,27 @@ public class UsersController : ControllerBase
         return NoContent();
     }
 
-        [HttpPost]
+    [HttpPost]
     [Route("/login")]
     public ActionResult<String> Login([FromBody] User u)
     {
         var dt = DateTime.Now;
 
-        User user=UsersService.getUser(u.Name,u.Password);
+        User user = UsersService.getUser(u.Name, u.Password);
 
-        if(user==null){
+        if (user == null)
+        {
             return Unauthorized();
         }
 
-        var claims = new List<Claim>
-        {
-            new Claim("id",user.Id.ToString()),
-        };
+        var claims = new List<Claim> { new Claim("id", user.Id.ToString()), };
 
-        if(user.Password=="12345678"){
+        if (user.Password == "12345678")
+        {
             claims.Add(new Claim("type", "Admin"));
         }
-        else{
+        else
+        {
             claims.Add(new Claim("type", "User"));
         }
 

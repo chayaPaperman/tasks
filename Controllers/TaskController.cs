@@ -1,10 +1,9 @@
-using Microsoft.AspNetCore.Mvc;
-using tasks.Models;
-using tasks.Interfaces;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using tasks.Interfaces;
+using tasks.Models;
 
 namespace tasks.Controllers;
-
 
 [ApiController]
 [Route("[controller]")]
@@ -13,11 +12,12 @@ public class TasksController : ControllerBase
 {
     private int userId;
     ITasksService TasksService;
-    public TasksController(ITasksService TasksService,IHttpContextAccessor httpContextAccessor )
+
+    public TasksController(ITasksService TasksService, IHttpContextAccessor httpContextAccessor)
     {
         this.TasksService = TasksService;
-        string id=httpContextAccessor.HttpContext?.User?.FindFirst("id")?.Value;
-        this.userId = int.Parse(id!=null?id:"0");
+        string id = httpContextAccessor.HttpContext?.User?.FindFirst("id")?.Value;
+        this.userId = int.Parse(id != null ? id : "0");
     }
 
     [HttpGet]
@@ -29,7 +29,7 @@ public class TasksController : ControllerBase
     [HttpGet("{id}")]
     public ActionResult<Task1> Get(int id)
     {
-        var task = TasksService.GetById(this.userId,id);
+        var task = TasksService.GetById(this.userId, id);
         if (task == null)
             return NotFound();
         return task;
@@ -38,17 +38,20 @@ public class TasksController : ControllerBase
     [HttpPost]
     public ActionResult Post(Task1 newTask)
     {
-        newTask.UserId=this.userId;
+        newTask.UserId = this.userId;
         var newId = TasksService.Add(newTask);
 
-        return CreatedAtAction("Post", 
-            new {id = newId}, TasksService.GetById(this.userId,newId));
+        return CreatedAtAction(
+            "Post",
+            new { id = newId },
+            TasksService.GetById(this.userId, newId)
+        );
     }
 
     [HttpPut("{id}")]
-    public ActionResult Put(int id,Task1 newTask)
+    public ActionResult Put(int id, Task1 newTask)
     {
-        newTask.UserId=this.userId;
+        newTask.UserId = this.userId;
         var result = TasksService.Update(id, newTask);
         if (!result)
         {
@@ -60,7 +63,7 @@ public class TasksController : ControllerBase
     [HttpDelete("{id}")]
     public ActionResult Delete(int id)
     {
-        var result = TasksService.Delete(this.userId,id);
+        var result = TasksService.Delete(this.userId, id);
         if (!result)
         {
             return BadRequest();

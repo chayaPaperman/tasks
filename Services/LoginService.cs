@@ -7,18 +7,21 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 
-namespace tasks.Services{
-
-    public class LoginService{
-        private static SymmetricSecurityKey key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("SXkSqsKyNUyvGbnHs7ke2NCq8zQzNLW7mPmHbnZZ"));
+namespace tasks.Services
+{
+    public class LoginService
+    {
+        private static SymmetricSecurityKey key = new SymmetricSecurityKey(
+            Encoding.UTF8.GetBytes("SXkSqsKyNUyvGbnHs7ke2NCq8zQzNLW7mPmHbnZZ")
+        );
         private static string issuer = "https://localhost:7254";
+
         public static SecurityToken GetToken(List<Claim> claims) =>
             new JwtSecurityToken(
                 issuer,
                 issuer,
                 claims,
                 expires: DateTime.Now.AddDays(1.0),
-                // expires: DateTime.Now,
                 signingCredentials: new SigningCredentials(key, SecurityAlgorithms.HmacSha256)
             );
 
@@ -28,14 +31,10 @@ namespace tasks.Services{
                 ValidIssuer = issuer,
                 ValidAudience = issuer,
                 IssuerSigningKey = key,
-                ClockSkew = TimeSpan.Zero // remove delay of token when expire
+                ClockSkew = TimeSpan.Zero
             };
 
         public static string WriteToken(SecurityToken token) =>
             new JwtSecurityTokenHandler().WriteToken(token);
-
-        // public User getUser(string name , string password){
-        //     return UsersList.Find(u=>u.Name==name && u.Password==password);
-        // }
     }
 }
